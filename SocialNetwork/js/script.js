@@ -1,6 +1,3 @@
-$(document).ready(function () {
-    $('body').removeClass('fade-out'); // 移除淡出类，启用淡入效果
-  });
 const app = new Vue({
     el: '#app',
     data: {
