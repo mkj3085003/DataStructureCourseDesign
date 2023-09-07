@@ -1,0 +1,228 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+}
+/* 添加过渡效果 */
+body {
+  transition: opacity 0.5s ease-in-out; /* 过渡属性、时间和缓动函数 */
+  opacity: 1; /* 初始透明度为1，即完全显示 */
+}
+
+body.fade-out {
+  opacity: 0; /* 淡出效果，将透明度设为0 */
+}
+body {
+  font-family: "Fjalla One", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-image: -moz-linear-gradient(180deg, rgb(192, 158, 255), rgb(158, 197, 255));
+  background-image: -webkit-linear-gradient(180deg, rgb(192, 158, 255), rgb(158, 197, 255));
+  background-image: linear-gradient(180deg, rgb(192, 158, 255), rgb(158, 197, 255));
+}
+
+.page-content {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+
+}
+
+.left-section {
+  position: fixed;
+  top: 70px;
+  left: 50px;
+  width: 30%;
+  height: 100%;
+  padding: 1rem;
+}
+
+.right-section {
+  text-align: center;
+  position: fixed;
+  top: 0px;
+  left: 25%;
+  width: 70%;
+  height: 100%;
+  padding: 1rem;
+  /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); */
+}
+
+.page-title {
+  text-align: center;
+  padding: 1rem;
+  background-color: #f1f1f1;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5), 0 3px 12px rgba(0, 0, 0, 0.3);
+}
+
+.page-title h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.page-title small {
+  display: block;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+[data-example] {
+  display: flex;
+  flex-flow: row nowrap;
+  width: 15em;
+  margin-right: auto;
+  margin-bottom: 1rem;
+  margin-left: 10%;
+  position: relative;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5), 0 3px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-example]::after {
+  content: attr(data-example);
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  position: absolute;
+  top: 1rem;
+  left: -1.5rem;
+  border-radius: 50%;
+  background-color: mediumvioletred;
+  color: white;
+  line-height: 3rem;
+  text-align: center;
+}
+
+[data-example] .input {
+  flex: 1;
+  background-color: white;
+}
+
+[data-example]>* {
+  padding: 2rem;
+}
+
+.normalbutton {
+  padding: 0.5rem 1rem;
+  border-radius: 3px;
+  background-color: mediumvioletred;
+  color: white;
+  font-size: 70%;
+  text-transform: uppercase;
+}
+
+.field-set {
+  margin-bottom: 1rem;
+}
+
+.field-set>* {
+  display: block;
+}
+
+.field-set>[type=checkbox],
+.field-set>label {
+  display: inline-block;
+}
+
+label {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 70%;
+  text-transform: uppercase;
+}
+
+input {
+  padding: 0.25em 0;
+  background-color: transparent;
+  border-bottom: 1px solid;
+  font: inherit;
+}
+
+mark {
+  display: inline-block;
+  padding: 0.25em;
+  border-radius: 3px;
+  background-color: khaki;
+}
+
+/* 第一个小窗口的大小 */
+[data-example="1"] {
+  width: 200px; /* 设置宽度 */
+  height: 150px; /* 设置高度 */
+}
+.set-line{
+  width: 180px; /* 设置宽度 */
+}
+.outputcontainer {
+  position: absolute;
+  top: 15%;
+  width: 100%;
+  height: 80%;
+  padding: 20px;
+  /* 添加边距 */
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  background-color: white;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+/* 返回主页的按钮 */
+.homebutton {
+  position: fixed;
+  top: -80px; /* 从顶部距离 */
+  left: 500px; /* 从左侧距离 */
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: inline-block;
+  text-align: center;
+  font-weight: bold;
+  padding: 0.7em 2em;
+  border: 3px solid #FF0072;
+  border-radius: 2px;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.1);
+  color: #FF0072;
+  text-decoration: none;
+  transition: 0.3s ease all;
+  z-index: 1;
+}
+
+.homebutton:before {
+  transition: 0.5s all ease;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  right: 50%;
+  bottom: 0;
+  opacity: 0;
+  content: '';
+  background-color: #FF0072;
+  z-index: -1;
+}
+
+.homebutton:hover, button:focus {
+  color: white;
+}
+
+.homebutton:hover:before, button:focus:before {
+  transition: 0.5s all ease;
+  left: 0;
+  right: 0;
+  opacity: 1;
+}
+
+.homebutton:active {
+  transform: scale(0.9);
+}
+/* 搜索出来的value值的大小 */
+.searchedValue{
+  margin-top:10px;
+  font-size:12px;
+  color:rgb(13, 26, 214);
+  font-weight: bold;
+}

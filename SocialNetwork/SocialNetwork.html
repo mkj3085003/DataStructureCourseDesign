@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SocialNetwork Visualization</title>
+    <link rel="stylesheet" href="css\SocialNetwork.css">
+    <link rel="stylesheet" href="css\title.css">
+</head>
+
+<body>
+
+    <div id="app">
+        <!-- 页面标题 -->
+        <div class="top-section">
+            <h1 data-shadow='SocialNetwork'>SocialNetwork</h1>
+
+        </div>
+        <div class="topright-section">
+            <button class="homebutton" v-on:click="redirectToHome"> Back Home </button>
+        </div>
+        <div class="down-section">
+            <!-- 页面左侧的卡片 -->
+            <div class="left-section">
+                <div class="card">
+                    <div class="card__content">
+                        <!-- 使用Vue的条件渲染来根据选项显示不同的内容 -->
+                        <!-- SocialNetwork 内容 -->
+                        <div id="chart-container">
+                            <!-- 展示结点信息的悬停框 -->
+                            <div id="tooltip" class="tooltip" style="display: none;"></div>
+                        </div>
+                        <div v-if="selectedOption === 'Network'">
+                            <!-- 绘制图例 -->
+                            <div id="indicator">
+                                <div v-for="(item, index) in indicatorItems" :key="index" class="one-indicator">
+                                    <div class="color-box" :style="{ background: item.color }"></div>
+                                    {{ item.name }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 结点是否展示文字的按钮 -->
+                        <div class="mode" v-if="selectedOption === 'Network'">
+                            <div class="container">
+                              <div class="tabs">
+                                <input type="radio" id="radio-1" name="tabs" checked="">
+                                <label class="tab" for="radio-1" @click="NodeTextNoVisibility">Circle</label>
+                                <input type="radio" id="radio-2" name="tabs">
+                                <label class="tab" for="radio-2" @click="NodeTextVisibility">Text</label>
+                                <span class="glider"></span>
+                              </div>
+                            </div>
+                          </div>
+
+                        <!-- NodeTable 内容 -->
+                        <div v-if="selectedOption === 'NodeTable'">
+                            <!-- NodeTable 内容 -->
+                            <!-- 使用 Element UI 表格组件 -->
+                            <!-- 搜索框 -->
+                            <div class="nodeTable-top-section">
+                                <input type="text" v-model="searchQuery" name="search" placeholder="Search For Anything.." class="search-input">
+                            </div>
+                            <!-- 文件上传 -->
+                            <div class="nodeTable-topright-section">
+                                <div class="fileProcess">
+                                    <input type="file" id="fileInput" @change="handleFileUpload"
+                                        style="display: none;" />
+                                    <button class="btn-file" id="btn-upload" @click="openFileInput">
+                                        🡅
+                                        <div class="hoverEffect">
+                                            <div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                    <button class="btn-file" id="btn-download" @click="downloadNodeManagerAsJson">
+                                        🡇
+                                        <div class="hoverEffect">
+                                            <div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="nodeTable-down-section">
+                                <!-- 个人结点 -->
+                                <div class="person-node-list">
+                                    <div class="person-node-titie">
+                                        <span class="node-title">PersonNode</span>
+                                        <button class="btn-insert" @click="showPersonAddForm">
+                                            create
+                                        </button>
+                                    </div>
+                                    <div class="person-node-content">
+                                        <div v-for="node in nodeManager.nodes" :key="node.id" v-if="node.tag === NodeTag.PERSON && (searchQuery === '' || node.name.toLowerCase().includes(searchQuery))">
+                                            <div class="person-node">
+                                                <p class="node-name">{{ node.name }}</p>
+                                                <i v-if="node.gender === 1" class="el-icon-male"></i>
+                                                <i v-else-if="node.gender === 2" class="el-icon-female"></i>
+                                                <div class="node-actions">
+                                                    <el-button type="primary" icon="el-icon-edit" circle
+                                                        class="custom-button" id="edit"
+                                                        @click="showEditPersonNodeForm(node.id)"></el-button>
+                                                    <el-button type="danger" icon="el-icon-delete" circle
+                                                        class="custom-button" id="delete"
+                                                        @click="showDeletePersonNodeDialog(node.id)"></el-button>
+                                                    <el-button type="success" icon="el-icon-star-off" circle
+                                                        class="custom-button" id="star"
+                                                        @click="generateRecommendedFriends(node.id)"></el-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 群组结点 -->
+                                <div class="group-node-list">
+                                    <div class="group-node-titie">
+                                        <span class="node-title">GroupNode</span>
+                                        <button class="btn-insert" @click="showGroupAddForm">
+                                            create
+                                        </button>
+                                    </div>
+                                    <div class="group-node-content">
+                                        <div v-for="node in nodeManager.nodes" :key="node.id" v-if="node.tag !== NodeTag.PERSON && (searchQuery === '' || node.name.toLowerCase().includes(searchQuery))">
+                                            <div class="person-node">
+                                                <p class="node-name">{{ node.name }}</p>
+                                                <div class="node-actions">
+                                                    <el-button type="primary" icon="el-icon-edit" circle
+                                                        class="custom-button" id="edit"
+                                                        @click="showEditGroupNodeForm(node.id)"></el-button>
+                                                    <el-button type="danger" icon="el-icon-delete" circle
+                                                        class="custom-button" id="delete"
+                                                        @click="showDeleteGroupNodeDialog(node.id)"></el-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 页面切换的导航栏 -->
+            <div class="right-section">
+                <form>
+                    <label>
+                        <input type="radio" name="radio" v-model="selectedOption" value="Network">
+                        <span @click="changeOption('Network')">Network</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="radio" v-model="selectedOption" value="NodeTable">
+                        <span @click="changeOption('NodeTable')">NodeTable</span>
+                    </label>
+                </form>
+            </div>
+        </div>
+        <!-- 添加个人结点的表单 -->
+        <div id="person-add-form" v-if="isPersonAddVisible">
+            <!-- 添加关闭按钮 -->
+            <button class="close-button" @click="hidePersonAddForm">✖</button>
+            <el-form :model="PersonFormData">
+                <el-form-item label="姓名">
+                    <el-input v-model="PersonFormData.name" class="form-width"></el-input>
+                </el-form-item>
+                <el-form-item label="性别">
+                    <el-select v-model="PersonFormData.gender" class="form-width">
+                        <el-option label="男" :value="PersonGender.MALE"></el-option>
+                        <el-option label="女" :value="PersonGender.FEMALE"></el-option>
+                        <el-option label="其他" :value="PersonGender.OTHER"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="群组">
+                    <el-select v-model="PersonFormData.groups" multiple class="form-width">
+                        <!-- 遍历显示群组选项 -->
+                        <el-option v-for="node in nodeManager.nodes" :key="node.id" :label="node.name" :value="node.id"
+                            v-if="node.tag !== NodeTag.PERSON"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="好友" class="form-label">
+                    <el-select v-model="PersonFormData.friends" multiple class="form-width">
+                        <!-- 遍历显示好友选项 -->
+                        <el-option v-for="node in nodeManager.nodes" :key="node.id" :label="node.name" :value="node.id"
+                            v-if="node.tag === NodeTag.PERSON"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="addPersonNode" id="btn-submit">提交</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+        <!-- 添加群组结点的表单 -->
+        <div id="group-add-form" v-if="isGroupAddVisible">
+            <!-- 添加关闭按钮 -->
+            <button class="close-button" @click="hideGroupAddForm">✖</button>
+            <el-form :model="GroupFormData">
+                <el-form-item label="群组名">
+                    <el-input v-model="GroupFormData.name" class="form-width"></el-input>
+                </el-form-item>
+                <el-form-item label="关联系数">
+                    <el-input v-model="GroupFormData.relationCoefficient" class="form-width" type="number"></el-input>
+                </el-form-item>
+                <el-form-item label="类别">
+                    <el-select v-model="GroupFormData.tag" class="form-width">
+                        <el-option label="小学" :value="NodeTag.PRIMARY_SCHOOL"></el-option>
+                        <el-option label="初中" :value="NodeTag.JUNIOR_HIGH"></el-option>
+                        <el-option label="高中" :value="NodeTag.SENIOR_HIGH "></el-option>
+                        <el-option label="大学" :value="NodeTag.UNIVERSITY "></el-option>
+                        <el-option label="其他" :value="NodeTag.GROUP"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="addGroupNode" id="btn-submit">提交</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+        <!-- 编辑个人结点的表单 -->
+        <div id="person-edit-form" v-if="isPersonEditVisible">
+            <el-form :model="EditedPersonData" class="form-container">
+                <el-form-item label="姓名">
+                    <el-input v-model="EditedPersonData.name" class="form-width"></el-input>
+                </el-form-item>
+                <el-form-item label="性别">
+                    <el-select v-model="EditedPersonData.gender" class="form-width">
+                        <el-option label="男" :value="PersonGender.MALE"></el-option>
+                        <el-option label="女" :value="PersonGender.FEMALE"></el-option>
+                        <el-option label="其他" :value="PersonGender.OTHER"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="群组">
+                    <el-select v-model="EditedPersonData.groups" multiple class="form-width">
+                        <!-- 遍历显示群组选项 -->
+                        <el-option v-for="node in nodeManager.nodes" :key="node.id" :label="node.name" :value="node.id"
+                            v-if="node.tag !== NodeTag.PERSON"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="好友" class="form-label">
+                    <el-select v-model="EditedPersonData.friends" multiple class="form-width">
+                        <!-- 遍历显示好友选项 -->
+                        <el-option v-for="node in nodeManager.nodes" :key="node.id" :label="node.name" :value="node.id"
+                            v-if="node.tag === NodeTag.PERSON && node.id !== EditedPersonData.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="updatePersonNode" id="btn-edit-save">保存</el-button>
+                    <el-button type="primary" @click="hidePersonEditForm" id="btn-edit-cancel">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+        <!-- 编辑群组结点的表单 -->
+        <div id="group-edit-form" v-if="isGroupEditVisible">
+            <el-form :model="EditedGroupData" class="form-container">
+                <el-form-item label="群组名称">
+                    <el-input v-model="EditedGroupData.name" class="form-width"></el-input>
+                </el-form-item>
+                <el-form-item label="关联数">
+                    <el-input v-model="EditedGroupData.relationCoefficient" class="form-width" type="number"></el-input>
+                </el-form-item>
+                <el-form-item label="群组类别">
+                    <el-select v-model="EditedGroupData.tag" class="form-width">
+                        <el-option label="小学" :value="NodeTag.PRIMARY_SCHOOL"></el-option>
+                        <el-option label="初中" :value="NodeTag.JUNIOR_HIGH"></el-option>
+                        <el-option label="高中" :value="NodeTag.SENIOR_HIGH "></el-option>
+                        <el-option label="大学" :value="NodeTag.UNIVERSITY "></el-option>
+                        <el-option label="其他" :value="NodeTag.GROUP"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="updateGroupNode" id="btn-edit-save">保存</el-button>
+                    <el-button type="primary" @click="hideGroupEditForm" id="btn-edit-cancel">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+        <!-- 删除个人结点的提示窗口 -->
+        <div id="person-delete-window" v-if="isDeletePersonNodeDialogVisible">
+            <span class="span-delete">确认删除个人结点 "{{ deletingPersonNode.name }}" 及其所有关系吗？</span>
+            <span class="span-delete-2">此操作无法撤销，请谨慎操作。</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="deletePersonNode" type="danger" id="btn-confirm">确认</el-button>
+                <el-button @click="hideDeletePersonNodeDialog" type="danger" id="btn-cancel">取消</el-button>
+            </span>
+        </div>
+        <!-- 删除群组结点的提示窗口 -->
+        <div id="group-delete-window" v-if="isDeleteGroupNodeDialogVisible">
+            <span class="span-delete">确认删除群组结点 "{{ deletingGroupNode.name }}" 及其所有关系吗？</span>
+            <span class="span-delete-2">此操作无法撤销，请谨慎操作。</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="deleteGroupNode" type="danger" id="btn-confirm-2">确认</el-button>
+                <el-button @click="hideDeleteGroupNodeDialog" type="danger" id="btn-cancel-2">取消</el-button>
+            </span>
+        </div>
+        <!-- 展示个人结点推荐好友的窗口 -->
+        <div id="recommend-friends" v-if="showRecommendFriends">
+            <div id="one-recommend-friend" v-for="friend in recommendedFriends" :key="friend.node.id">
+
+                <div class="friend-name">
+                    <span class="star-icon"></span>
+                    {{ friend.node.name }}
+                    <el-button id="btn-add" type="danger" @click="addFriend(friend.node)">添加</el-button>
+                </div>
+                <div class="friend-content">
+                    推荐指数: {{ friend.idx.toFixed(2) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    共同好友数量:{{friend.commonFriends }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    共同群组数量:{{friend.commonOrganizations}}
+                </div>
+            </div>
+            <el-button id="btn-close" type="danger" @click="closeRecommendFriends">关闭</el-button>
+        </div>
+    </div>
+
+
+    <!-- 引入 Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+
+    <!-- 引入D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- 引入 Element UI 样式和脚本 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui@2.15.6/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui@2.15.6/lib/index.js"></script>
+
+    <!-- 引入数据结构部分 -->
+    <script src="js/DataStructure/NodeBase.js"></script>
+    <script src="js/DataStructure/GroupNode.js"></script>
+    <script src="js/DataStructure/PersonNode.js"></script>
+    <script src="js/DataStructure/NodeManager.js"></script>
+    <script src="js/script.js"></script>
+
+
+</body>
+
+</html>

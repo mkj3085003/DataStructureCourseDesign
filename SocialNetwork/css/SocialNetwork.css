@@ -1,0 +1,795 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+}
+
+/* 添加过渡效果 */
+body {
+    transition: opacity 0.5s ease-in-out;
+    /* 过渡属性、时间和缓动函数 */
+    opacity: 1;
+    /* 初始透明度为1，即完全显示 */
+    font-family: "Fjalla One", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: -moz-linear-gradient(135deg, rgb(83, 249, 213), rgb(69, 146, 247));
+    background-image: -webkit-linear-gradient(135deg, rgb(83, 249, 213), rgb(69, 146, 247));
+    background-image: linear-gradient(135deg, rgb(83, 249, 213), rgb(69, 146, 247));
+}
+
+.top-section {
+    position: fixed;
+    top: 0;
+    left: 0px;
+    text-align: center;
+    width: 100%;
+    height: 15%;
+    padding: 1rem;
+}
+
+.topright-section {
+    position: fixed;
+    top: 0;
+    left: 70%;
+    text-align: center;
+    width: 20%;
+    /* 设置合适的宽度 */
+    height: 15%;
+    padding: 1rem;
+    z-index: 1;
+    overflow: hidden;
+    /* 处理溢出内容 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.down-section {
+    position: absolute;
+    top: 12%;
+    /* 与 .top-section 的高度相匹配 */
+    left: 0px;
+    width: 100%;
+    height: 88%;
+    padding: 1rem;
+    display: flex;
+}
+
+.left-section {
+    position: absolute;
+    left: 10%;
+    width: 90%;
+    height: 88%;
+}
+
+.right-section {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 10%;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* 页面切换的导肮栏 */
+.right-section form {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.right-section label {
+    display: flex;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0.375em;
+}
+
+.right-section label input {
+    position: absolute;
+    left: -9999px;
+}
+
+.right-section label input:checked+span {
+    background-color: #414181;
+    color: white;
+}
+
+.right-section label input:checked+span:before {
+    box-shadow: inset 0 0 0 0.4375em #00005c;
+}
+
+.right-section label span {
+    display: flex;
+    align-items: center;
+    padding: 0.375em 0.75em 0.375em 0.375em;
+    border-radius: 99em;
+    transition: 0.25s ease;
+    color: #414181;
+}
+
+.right-section label span:hover {
+    background-color: #d6d6e5;
+}
+
+.right-section label span:before {
+    display: flex;
+    flex-shrink: 0;
+    content: "";
+    background-color: #fff;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    margin-right: 0.375em;
+    transition: 0.25s ease;
+    box-shadow: inset 0 0 0 0.125em #00005c;
+}
+
+
+/* 卡片的样式 */
+.card {
+    position: relative;
+    /* 使用相对定位 */
+    /* 不使用绝对定位 */
+    width: 80vw;
+    height: 80vh;
+    border-radius: 20px;
+    padding: 6px;
+    box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+    background-image: linear-gradient(144deg, #AF40FF, #5B42F3 50%, #00DDEB);
+}
+
+.card__content {
+    background: white;
+    border-radius: 17px;
+    width: 100%;
+    height: 100%;
+}
+
+.tooltip {
+    position: absolute;
+    background-image: -moz-linear-gradient(0deg, rgb(9, 1, 239), rgb(102, 18, 248));
+    background-image: -webkit-linear-gradient(0deg, rgb(9, 1, 239), rgb(102, 18, 248));
+    background-image: linear-gradient(0deg, rgb(9, 1, 239), rgb(102, 18, 248));
+    /* background: rgba(0, 0, 0, 0.7); */
+    color: #ffffff;
+    padding: 5px;
+    border-radius: 5px;
+    pointer-events: none;
+    font-size: 12px;
+}
+
+/* 关系图的图例提示 */
+#indicator {
+    position: absolute;
+    /* 使用绝对定位 */
+    top: 88%;
+    /* 相对于父元素顶部 */
+    right: 0;
+    /* 相对于父元素右侧 */
+    text-align: center;
+    width: 100%;
+    height: 15%;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+/* mode选择按钮样式 */
+.mode {
+    position: absolute;
+    /* 使用绝对定位 */
+    top: 0;
+    /* 相对于父元素顶部 */
+    right: 0;
+    /* 相对于父元素右侧 */
+    text-align: center;
+    width: 100%;
+    height: 15%;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+
+}
+
+.tabs {
+    display: flex;
+    position: relative;
+    background-color: #ffffff;
+    box-shadow: 0 0 1px 0 rgba(24, 94, 224, 0.15), 0 6px 12px 0 rgba(24, 94, 224, 0.15);
+    padding: 0.75rem;
+    border-radius: 99px;
+}
+
+.tabs * {
+    z-index: 2;
+}
+
+.container input[type="radio"] {
+    display: none;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    width: 50px;
+    font-size: .8rem;
+    color: black;
+    font-weight: 500;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: color 0.15s ease-in;
+}
+
+.container input[type="radio"]:checked+label {
+    color: #185ee0;
+}
+
+.container input[type="radio"]:checked+label>.notification {
+    background-color: #185ee0;
+    color: #fff;
+    margin: 0px;
+}
+
+.container input[id="radio-1"]:checked~.glider {
+    transform: translateX(0);
+}
+
+.container input[id="radio-2"]:checked~.glider {
+    transform: translateX(100%);
+}
+
+.container input[id="radio-3"]:checked~.glider {
+    transform: translateX(200%);
+}
+
+.glider {
+    position: absolute;
+    display: flex;
+    height: 30px;
+    width: 50px;
+    background-color: #e6eef9;
+    z-index: 1;
+    border-radius: 99px;
+    transition: 0.25s ease-out;
+}
+
+@media (max-width: 700px) {
+
+    .tabs {
+        transform: scale(0.6);
+    }
+}
+
+
+.one-indicator {
+    margin-right: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #00005c;
+
+}
+
+.color-box {
+    display: inline-block;
+    width: 20px;
+    /* 调整宽度以适应你的需求 */
+    height: 20px;
+    /* 调整高度以适应你的需求 */
+    margin-right: 5px;
+    /* 调整边距以适应你的需求 */
+}
+
+.label {
+    vertical-align: middle;
+    /* 使标签垂直居中对齐 */
+}
+
+/* NodeTable页面的布局 */
+.nodeTable-top-section {
+    position: absolute;
+    /* 使用绝对定位 */
+    top: 10px;
+    /* 相对于父元素顶部 */
+    right: 0;
+    /* 相对于父元素右侧 */
+    text-align: center;
+    width: 100%;
+    height: 15%;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nodeTable-topright-section {
+    position: absolute;
+    /* 使用绝对定位 */
+    top: 10px;
+    left: 80%;
+    /* 设置合适的左侧位置 */
+    text-align: center;
+    width: 15%;
+    /* 设置合适的宽度，确保按钮水平排列 */
+    height: 15%;
+    padding: 1rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    /* 将子元素水平排列 */
+    align-items: center;
+    /* 在垂直方向上居中对齐按钮 */
+}
+
+
+.nodeTable-down-section {
+    position: absolute;
+    top: 15%;
+    /* 与 .top-section 的高度相匹配 */
+    left: 0px;
+    width: 100%;
+    height: 85%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.group-node-list,
+.person-node-list {
+    flex: 1;
+    border: 2px solid #9c86fc;
+    border-radius: 10px;
+    margin-left: 50px;
+    margin-bottom: 30px;
+    display: flex;
+    /* 添加 flex 属性以确保子元素占据整个高度 */
+    flex-direction: column;
+    /* 设置子元素垂直排列 */
+}
+
+.group-node-titie,
+.person-node-titie {
+    position: relative;
+    top: 0;
+    /* 调整为0，不再使用百分比 */
+    left: 0;
+    height: 10%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    /* 让子元素均匀分布空间 */
+    align-items: center;
+    /* 垂直居中对齐子元素 */
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.node-title {
+    margin-left: 35px;
+    /* 去掉标题的默认外边距，可以根据需要进行调整 */
+
+}
+
+.btn-insert {
+    margin-right: 35px;
+    height: 35px;
+    width: 80px;
+    text-align: center;
+}
+
+.group-node-content,
+.person-node-content {
+    position: relative;
+    top: 0;
+    /* 调整为0，不再使用百分比 */
+    left: 0;
+    height: 90%;
+    overflow-y: auto;
+}
+
+.group-node-list {
+    flex: 1;
+    /* 让子元素均匀分配容器的可用高度，实现各占50% */
+    border: 2px solid #9c86fc;
+    /* 添加2px宽度的实线边框，可以根据需要调整颜色 */
+    border-radius: 10px;
+    /* 添加圆角 */
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 30px;
+
+    overflow-y: auto;
+    /* 当结点内容溢出容器时显示滚动条 */
+}
+
+/* 搜索框 */
+
+.search-input {
+    background-color: white;
+    max-width: 400px;
+    width: 400px;
+    height: 50px;
+    padding: 10px;
+    border: 2px solid #9c86fc;
+    border-radius: 5px;
+}
+
+
+.search-input:focus {
+    color: rgb(18, 59, 244);
+    background-color: white;
+    outline-color: rgb(18, 59, 244);
+    box-shadow: -3px -3px 15px rgb(18, 59, 244);
+    transition: .1s;
+    transition-property: box-shadow;
+}
+
+/* 上传文件和下载文件的按钮 */
+.btn-file {
+    font-family: monospace;
+    background-color: #f3f7fe;
+    color: #3b82f6;
+    border: none;
+    border-radius: 8px;
+    width: 50px;
+    height: 50px;
+    transition: .3s;
+    margin-left: 20px;
+}
+
+.btn-file:hover {
+    background-color: #3b82f6;
+    box-shadow: 0 0 0 5px #3b83f65f;
+    color: #fff;
+}
+
+/* 结点title的样式 */
+
+.node-title {
+    background-image: -moz-linear-gradient(90deg, rgb(235, 138, 249), rgb(66, 132, 255));
+    background-image: -webkit-linear-gradient(90deg, rgb(235, 138, 249), rgb(66, 132, 255));
+    background-image: linear-gradient(90deg, rgb(235, 138, 249), rgb(66, 132, 255));
+    font-size: 22px;
+    background-clip: text;
+    /* 将背景应用于文本 */
+    -webkit-background-clip: text;
+    /* Safari兼容性 */
+    color: transparent;
+    /* 隐藏原始文本颜色 */
+    font-weight: bold;
+}
+
+.group-node,
+.person-node {
+    width: 90%;
+    margin: 0 auto;
+    /* 水平居中 */
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-image: -moz-linear-gradient(45deg, rgb(184, 248, 255), rgb(169, 163, 255));
+
+    background-image: -webkit-linear-gradient(45deg, rgb(184, 248, 255), rgb(169, 163, 255));
+
+    background-image: linear-gradient(45deg, rgb(184, 248, 255), rgb(169, 163, 255));
+    /* background-color: #e0f0ff; */
+    /* 浅蓝色背景 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* 阴影效果 */
+}
+
+.node-name {
+    margin-left: 10px;
+    font-weight: bold;
+    color: #00005c;
+    width: 150px;
+    /* 设置固定的宽度，可以根据需要调整 */
+    white-space: nowrap;
+    /* 强制文本不换行 */
+    overflow: hidden;
+    /* 隐藏溢出的文本 */
+    text-overflow: ellipsis;
+    /* 显示省略号 (...) */
+}
+
+.node-actions {
+    display: flex;
+    gap: 10px;
+}
+
+#edit {
+    background-image: -moz-linear-gradient(45deg, rgb(186, 148, 254), rgb(124, 133, 253));
+
+    background-image: -webkit-linear-gradient(45deg, rgb(186, 148, 254), rgb(124, 133, 253));
+
+    background-image: linear-gradient(45deg, rgb(186, 148, 254), rgb(124, 133, 253));
+    border: none;
+}
+
+#delete {
+    background-image: -moz-linear-gradient(180deg, rgb(253, 173, 155), rgb(249, 133, 222));
+
+    background-image: -webkit-linear-gradient(180deg, rgb(253, 173, 155), rgb(249, 133, 222));
+
+    background-image: linear-gradient(180deg, rgb(253, 173, 155), rgb(249, 133, 222));
+    border: none;
+}
+
+#star {
+    background-image: -moz-linear-gradient(0deg, rgb(62, 249, 149), rgb(63, 218, 253));
+
+    background-image: -webkit-linear-gradient(0deg, rgb(62, 249, 149), rgb(63, 218, 253));
+
+    background-image: linear-gradient(0deg, rgb(62, 249, 149), rgb(63, 218, 253));
+    border: none;
+
+}
+
+
+
+/* 添加结点按钮的样式 */
+.btn-insert {
+    padding: 10px 10px;
+    border: 0;
+    border-radius: 50px;
+    background-image: -moz-linear-gradient(90deg, rgb(132, 77, 249), rgb(236, 142, 251));
+
+    background-image: -webkit-linear-gradient(90deg, rgb(132, 77, 249), rgb(236, 142, 251));
+
+    background-image: linear-gradient(90deg, rgb(132, 77, 249), rgb(236, 142, 251));
+    color: #ffffff;
+    font-weight: Bold;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+}
+
+.btn-insert:hover {
+    background-image: -moz-linear-gradient(90deg, rgb(132, 77, 249), rgb(236, 142, 251));
+
+    background-image: -webkit-linear-gradient(90deg, rgb(132, 77, 249), rgb(236, 142, 251));
+
+    background-image: linear-gradient(90deg, rgb(132, 77, 249), rgb(236, 142, 251));
+    box-shadow: 0 0 20px #6fc5ff50;
+    transform: scale(1.1);
+}
+
+.btn-insert:active {
+    background-color: #3d94cf;
+    transition: all 0.25s;
+    -webkit-transition: all 0.25s;
+    box-shadow: none;
+    transform: scale(0.98);
+}
+
+/* 添加个人结点的表单 */
+#group-edit-form,
+#person-edit-form,
+#group-add-form,
+#person-add-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding-top: 20px;
+    border-radius: 10px;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    max-height: 600px;
+    /* 最大高度 */
+
+    /* 设置表单的宽度 */
+    background-image: -moz-linear-gradient(180deg, rgb(204, 255, 241), rgb(205, 242, 254));
+
+    background-image: -webkit-linear-gradient(180deg, rgb(204, 255, 241), rgb(205, 242, 254));
+
+    background-image: linear-gradient(180deg, rgb(204, 255, 241), rgb(205, 242, 254));
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* 添加阴影效果 */
+    display: flex;
+    flex-direction: column;
+    /* 垂直布局 */
+    align-items: center;
+    /* 水平居中 */
+    justify-content: center;
+    /* 垂直居中 */
+    overflow-y: auto;
+}
+
+.form-width {
+    width: 300px !important;
+    /* 使用 !important 来提高样式优先级 */
+}
+
+.form-container {
+    max-height: 600px;
+    /* 最大高度为父容器的80% */
+}
+
+/* 关闭的按钮样式 */
+.close-button {
+    background-image: -moz-linear-gradient(135deg, rgb(83, 249, 213), rgb(69, 146, 247));
+    background-image: -webkit-linear-gradient(135deg, rgb(83, 249, 213), rgb(69, 146, 247));
+    background-image: linear-gradient(135deg, rgb(83, 249, 213), rgb(69, 146, 247));
+    margin-left: 350px;
+    width: 20px;
+    border: none;
+    color: white;
+}
+
+#btn-submit {
+    background-image: -moz-linear-gradient(135deg, rgb(83, 249, 213), rgb(69, 146, 247));
+    background-image: -webkit-linear-gradient(135deg, rgb(83, 249, 213), rgb(69, 146, 247));
+    background-image: linear-gradient(135deg, rgb(83, 249, 213), rgb(69, 146, 247));
+    margin-left: 100px;
+    width: 100px;
+    border: none;
+}
+
+#btn-edit-save,
+#btn-edit-cancel {
+    background-image: -moz-linear-gradient(135deg, rgb(83, 249, 213), rgb(69, 146, 247));
+    background-image: -webkit-linear-gradient(135deg, rgb(83, 249, 213), rgb(69, 146, 247));
+    background-image: linear-gradient(135deg, rgb(83, 249, 213), rgb(69, 146, 247));
+    margin-left: 45px;
+    width: 80px;
+    border: none;
+}
+
+/* 自定义对话框样式 */
+#group-delete-window,
+#person-delete-window {
+    padding: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    font-weight: bold;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    height: 200px;
+    color: #1b044d;
+    font-family: "华文中宋", sans-serif;
+    /* 设置表单的宽度 */
+    background-image: -moz-linear-gradient(45deg, rgb(251, 121, 199), rgb(255, 255, 255));
+    background-image: -webkit-linear-gradient(45deg, rgb(251, 121, 199), rgb(255, 255, 255));
+    background-image: linear-gradient(45deg, rgb(251, 121, 199), rgb(255, 255, 255));
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* 添加阴影效果 */
+    display: flex;
+    flex-direction: column;
+    /* 垂直布局 */
+    align-items: center;
+    /* 水平居中 */
+    justify-content: center;
+    /* 垂直居中 */
+}
+
+.span-delete {
+    margin: 10px;
+}
+
+.span-delete-2 {
+    margin: 10px;
+    margin-bottom: 25px;
+}
+
+#btn-cancel,
+#btn-confirm,
+#btn-cancel-2,
+#btn-confirm-2 {
+    padding: 10px;
+    width: 60px;
+    height: 35px;
+    background-image: -moz-linear-gradient(45deg, rgb(186, 148, 254), rgb(124, 133, 253));
+    background-image: -webkit-linear-gradient(45deg, rgb(186, 148, 254), rgb(124, 133, 253));
+    background-image: linear-gradient(45deg, rgb(186, 148, 254), rgb(124, 133, 253));
+    border: none;
+}
+
+/* 推荐好友的窗口 */
+#recommend-friends {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding-top: 40px;
+    border-radius: 10px;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    max-height: 600px;
+    /* 最大高度 */
+    font-size: 12px;
+    /* 设置表单的宽度 */
+    background-image: -moz-linear-gradient(135deg, rgb(42, 213, 239), rgb(207, 252, 220));
+
+    background-image: -webkit-linear-gradient(135deg, rgb(42, 213, 239), rgb(207, 252, 220));
+
+    background-image: linear-gradient(135deg, rgb(42, 213, 239), rgb(207, 252, 220));
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* 添加阴影效果 */
+    display: flex;
+    flex-direction: column;
+    /* 垂直布局 */
+    align-items: center;
+    /* 左对齐 */
+    justify-content: flex-start;
+
+    /* 垂直居中 */
+    overflow-y: auto;
+
+}
+
+#one-recommend-friend {
+    justify-content: flex-end;
+    /* 右对齐按钮 */
+    margin: 15px;
+}
+
+.friend-name {
+    color: white;
+    font-size: 14px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.friend-content {
+    font-size: 12px;
+    color: #00005c;
+    font-weight: bold;
+}
+
+.star-icon::before {
+    content: "\2605";
+    /* Unicode字符，表示一个星星 */
+    color: rgb(244, 209, 7);
+    /* 星星的颜色 */
+    margin-right: 5px;
+    /* 可以调整星星与文本之间的间距 */
+}
+
+#btn-close {
+    background-image: -moz-linear-gradient(180deg, rgb(38, 237, 224), rgb(54, 236, 200));
+    background-image: -webkit-linear-gradient(180deg, rgb(38, 237, 224), rgb(54, 236, 200));
+    background-image: linear-gradient(180deg, rgb(38, 237, 224), rgb(54, 236, 200));
+    padding: 10px;
+    width: 8cqb;
+    height: 35px;
+    border: none;
+    color: white;
+    margin: 20px;
+}
+
+#btn-add {
+    background-image: -moz-linear-gradient(180deg, rgb(38, 237, 224), rgb(54, 236, 200));
+    background-image: -webkit-linear-gradient(180deg, rgb(38, 237, 224), rgb(54, 236, 200));
+    background-image: linear-gradient(180deg, rgb(38, 237, 224), rgb(54, 236, 200));
+    padding: 10px;
+    width: 60px;
+    height: 35px;
+    border: none;
+    color: white;
+    position: absolute;
+    /* 使用绝对定位 */
+    right: 80px;
+    margin-top: -10px;
+}

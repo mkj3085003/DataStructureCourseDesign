@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Hash Table Visualization</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/title.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 页面内容 -->
+    <div class="page-content">
+      <!-- 页面左侧 -->
+      <div class="left-section">
+        <!-- 1.哈希表的创建（点击按钮或者按下回车以后开始绘制当前空的哈希表 -->
+        <div data-example="1">
+          <section class="input" v-if="InputLimit">
+            <div class="field-set">
+              <label for="limitInput">limit</label>
+              <input id="limitInput" v-model="limit" v-on:keyup.enter="constructor" type="text" />
+            </div>
+            <button class="normalbutton" v-on:click="create">Confirm</button>
+          </section>
+          <section class="input" v-else>
+            <div class="field-set">
+              <label for="limitInput">Limit</label>
+              <p class="set-line">has been set to: {{ ht.limit }}</p>
+            </div>
+            <button class="normalbutton" v-on:click="resetInput">Reset</button>
+          </section>
+        </div>
+        <!-- 2.哈希表的插入或者编辑 -->
+        <div data-example="2">
+          <section class="input">
+            <div class="field-set">
+              <label for="keyInput">Key</label>
+              <input id="keyInput" v-model="newKey" type="text" />
+            </div>
+            <div class="field-set">
+              <label for="valueInput">Value</label>
+              <input id="valueInput" v-model="newValue" type="text" />
+            </div>
+            <button class="normalbutton" v-on:click="InsertOrEdit">Insert/Edit</button>
+          </section>
+        </div>
+        <!-- 3.哈希表的查找 -->
+        <div data-example="3">
+          <section class="input">
+            <div class="field-set">
+              <label for="keyInput">Key</label>
+              <input id="keyInput" v-model="searchKey" type="text" />
+            </div>
+            <button class="normalbutton" v-on:click="Retrieve">Retrieve</button>
+            <section class="searchedValue">
+              <p>
+                Value for key "{{ searchKey }}": 
+                <mark>{{ searchedValue }}</mark>
+              </p>
+            </section>
+          </section>
+        </div>
+        <!-- 4.哈希表的删除 -->
+        <div data-example="4">
+          <section class="input">
+            <div class="field-set">
+              <label for="keyInput">Key</label>
+              <input id="keyInput" v-model="deleteKey" type="text" />
+            </div>
+            <button class="normalbutton" v-on:click="Remove">Remove</button>
+          </section>
+        </div>
+      </div>
+      <div class="right-section">
+        <!-- 页面标题 -->
+        <div>
+          <h1 data-shadow='Hash Table Visualization'>Hash Table Visualization</h1>
+        </div>
+        <div>
+          <h3 data-shadow='with chain address method'>with chain address method</h3>
+        </div>
+        <!-- 返回主页的按钮 -->
+        <button class="homebutton" v-on:click="redirectToHome">Back home</button>
+
+        <!-- 展示绘制哈希表 -->
+        <div class="outputcontainer">
+          <div id="canvas-container" style="width: 1150px; height: 685px; overflow: auto;">
+            <canvas id="c" width="1150" height="685"></canvas>
+          </div>
+        </div>
+        <!-- <canvas ref="canvas"></canvas> -->
+      </div>
+    </div>
+
+    <script src='https://unpkg.com/vue@2.1.10/dist/vue.min.js'></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src='./fabric.js'></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+
+    <script src="js/hashTable.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/title.js"></script>
+
+</body>
+
+</html>
